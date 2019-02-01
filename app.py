@@ -37,7 +37,18 @@ def predictvalues():
     updatedMessagesList=[{'timestamp': "2019-01-24T09:53:18-06:00", 'state': "DISCONNECTED", 'userName': "user-pc", 'ipAddresses': "172.16.13.25", 'macAddress': "c4:b3:01:b7:42:d1"}, {'timestamp': "2019-01-24T09:53:18-06:00", 'state': "DISCONNECTED", 'userName': "user-pc", 'ipAddresses': "172.16.13.25", 'macAddress': "c4:b3:01:b7:42:d2"}, {'timestamp': "2019-01-24T09:53:18-06:00", 'state': "DISCONNECTED", 'userName': "user-pc", 'ipAddresses': "172.16.13.25", 'macAddress': "c4:b3:01:b7:42:d3"}]
 
     #testing with values sent from the HTML template
-    value1=request.form['input1']
+    primaryIPinput=request.form['primaryIPinput']
+    pxGridServerCAinput=request.form['pxGridServerCAinput']
+    pxGridServerCAKeyinput=request.form['pxGridServerCAKeyinput']
+    deviceCertinput=request.form['deviceCertinput']
+    clientNodeNameinput=request.form['clientNodeNameinput']
+
+    print("primaryIPinput: ",primaryIPinput)
+    print("pxGridServerCAinput: ",pxGridServerCAinput)
+    print("pxGridServerCAKeyinput: ",pxGridServerCAKeyinput)
+    print("deviceCertinput: ",deviceCertinput)
+    print("clientNodeNameinput: ",clientNodeNameinput)
+
     value2="just some more test data"
 
     #sessions_text="Timestamp: "+sampleMessageData['timestamp']+" State:"+sampleMessageData['state']+" UserName:"+sampleMessageData['userName']+" IP Addresses:"+sampleMessageData['ipAddresses'][0]+" Mac Address:"+sampleMessageData['macAddress']

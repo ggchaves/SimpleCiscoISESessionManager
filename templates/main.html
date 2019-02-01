@@ -134,25 +134,25 @@
       <table>
         <tr>
           <th>Primary Host Name/IP Address:</th>         
-          <td><input type = "text" name="input1" id="input1" size=45></td>
+          <td><input type = "text" name="primaryIPinput" id="primaryIPinput" size=45></td>
         </tr>
 
         <tr>
           <th>pxGrid Server CA:</th>         
-          <td><input type = "text" name="input2" id="input2" size=45></td>
+          <td><input type = "text" name="pxGridServerCAinput" id="pxGridServerCAinput" size=45></td>
         </tr>
 
         <tr>
           <th>pxGrid Server CA key:</th>         
-          <td><input type = "text" name="input3" id="input3" size=45></td>
+          <td><input type = "text" name="pxGridServerCAKeyinput" id="pxGridServerCAKeyinput" size=45></td>
         </tr>
         <tr>
             <th>Device Certificate:</th>         
-            <td><input type = "text" name="input4" id="input4" size=45></td>
+            <td><input type = "text" name="deviceCertinput" id="deviceCertinput" size=45></td>
         </tr>
         <tr>
             <th>Client Node Name:</th>         
-            <td><input type = "text" name="input5" id="input5" size=45></td>
+            <td><input type = "text" name="clientNodeNameinput" id="clientNodeNameinput" size=45></td>
         </tr>
 
       </table>
@@ -216,7 +216,7 @@ $('#do_smth').click(function(){
   $('.spinnerContainer').show();     
 
 //data_to_be_sent = 'box1_helper='+document.getElementById("box1_helper").value;
-data_to_be_sent = 'input1='+document.getElementById("input1").value;
+data_to_be_sent = 'primaryIPinput='+document.getElementById("primaryIPinput").value+"&"+'pxGridServerCAinput='+document.getElementById("pxGridServerCAinput").value+"&"+'pxGridServerCAKeyinput='+document.getElementById("pxGridServerCAKeyinput").value+"&"+'deviceCertinput='+document.getElementById("deviceCertinput").value+"&"+'clientNodeNameinput='+document.getElementById("clientNodeNameinput").value;
 
     
 $.ajax({
