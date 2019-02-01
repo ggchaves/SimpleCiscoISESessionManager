@@ -3,15 +3,43 @@ from flask import Flask, render_template, request, session, jsonify, make_respon
 from flask_httpauth import HTTPBasicAuth
 from flask_bcrypt import Bcrypt
 from simplepam import authenticate
+import asyncio
+import time
+from threading import Thread
+
 
 import config as c
+
+isConnected=False
+i=0
+
+def start_update_sessions_loop(loop):
+    asyncio.set_event_loop(loop)
+    loop.run_forever()
+
+
+def update_sessions_work():
+    i=0
+    global latestMessagesList
+    while isConnected:
+        #final loop getting updates on sessions
+        latestMessagesList=[{'timestamp': "2019-01-24T09:53:18-06:00", 'state': "DISCONNECTED", 'userName': "looped-pc"+str(i), 'ipAddresses': "172.16.13.25", 'macAddress': "c4:b3:01:b7:42:d1"}, {'timestamp': "2019-01-24T09:53:18-06:00", 'state': "DISCONNECTED", 'userName': "user-pc", 'ipAddresses': "172.16.13.25", 'macAddress': "c4:b3:01:b7:42:d2"}, {'timestamp': "2019-01-24T09:53:18-06:00", 'state': "DISCONNECTED", 'userName': "user-pc", 'ipAddresses': "172.16.13.25", 'macAddress': "c4:b3:01:b7:42:d3"}]
+        i=i+1
+        print(i)
+        time.sleep(3)
+
+new_loop = asyncio.new_event_loop()
+t = Thread(target=start_update_sessions_loop, args=(new_loop,))
+t.start()
+
+
 app = Flask(__name__)
 app.secret_key = c.secret_key
 
 bcrypt = Bcrypt(app)
 auth = HTTPBasicAuth()
 
-sampleMessagesList=[{'timestamp': " ", 'state': " ", 'userName': " ", 'ipAddresses': " ", 'macAddress': " "}]
+latestMessagesList=[{'timestamp': " ", 'state': " ", 'userName': " ", 'ipAddresses': " ", 'macAddress': " "}]
 
 
 @auth.verify_password
@@ -25,14 +53,15 @@ def unauthorized():
 @app.route('/')
 @auth.login_required
 def main():
-#    sampleMessageData={'timestamp': "2019-01-24T09:53:18-06:00", 'state': "DISCONNECTED", 'userName': "admin-pc", 'ipAddresses': "172.16.13.25", 'macAddress': "c4:b3:01:b7:42:d1"}
-    return render_template('main.html',result=sampleMessagesList)
+    global latestMessagesList
+    global i
+    return render_template('main.html',result=latestMessagesList)
 
 
 
-@app.route('/DoSomething', methods=['POST'])
-def predictvalues():
-
+@app.route('/DoStart', methods=['POST'])
+def startShowingSessions():
+    global isConnected
     print(request.form)
     updatedMessagesList=[{'timestamp': "2019-01-24T09:53:18-06:00", 'state': "DISCONNECTED", 'userName': "user-pc", 'ipAddresses': "172.16.13.25", 'macAddress': "c4:b3:01:b7:42:d1"}, {'timestamp': "2019-01-24T09:53:18-06:00", 'state': "DISCONNECTED", 'userName': "user-pc", 'ipAddresses': "172.16.13.25", 'macAddress': "c4:b3:01:b7:42:d2"}, {'timestamp': "2019-01-24T09:53:18-06:00", 'state': "DISCONNECTED", 'userName': "user-pc", 'ipAddresses': "172.16.13.25", 'macAddress': "c4:b3:01:b7:42:d3"}]
 
@@ -49,16 +78,29 @@ def predictvalues():
     print("deviceCertinput: ",deviceCertinput)
     print("clientNodeNameinput: ",clientNodeNameinput)
 
+    isConnected=True
+
     value2="just some more test data"
-
-    #sessions_text="Timestamp: "+sampleMessageData['timestamp']+" State:"+sampleMessageData['state']+" UserName:"+sampleMessageData['userName']+" IP Addresses:"+sampleMessageData['ipAddresses'][0]+" Mac Address:"+sampleMessageData['macAddress']
-
-
+    new_loop.call_soon_threadsafe(update_sessions_work)
+    print("continued after starting thread!!")
 
     #Then return it to HTML
 
 #    return jsonify({'status': 'OK', 'value2': value2});
     return render_template('main.html',result=updatedMessagesList)
+
+@app.route('/DoStop', methods=['POST'])
+def stopShowingSessions():
+    global isConnected
+    global latestMessagesList
+    print(request.form)
+    latestMessagesList=[{'timestamp': " ", 'state': " ", 'userName': " ", 'ipAddresses': " ", 'macAddress': " "}]
+    isConnected=False
+
+    #Then return it to HTML
+#    return jsonify({'status': 'OK', 'value2': value2});
+    return render_template('main.html',result=latestMessagesList)
+
 
 
 if __name__ == "__main__":
