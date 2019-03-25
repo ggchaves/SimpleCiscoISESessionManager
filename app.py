@@ -101,6 +101,20 @@ def stopShowingSessions():
 #    return jsonify({'status': 'OK', 'value2': value2});
     return render_template('main.html',result=latestMessagesList)
 
+@app.route('/DoResetSessions', methods=['POST'])
+def doResetSessions():
+    global isConnected
+    global latestMessagesList
+
+    #Here we will bring up another form to reset sessions that have been selected
+
+    #print(request.form)
+    #latestMessagesList=[{'timestamp': " ", 'state': " ", 'userName': " ", 'ipAddresses': " ", 'macAddress': " "}]
+    #isConnected=False
+
+    #Then return it to HTML
+#    return jsonify({'status': 'OK', 'value2': value2});
+    return render_template('main.html',result=latestMessagesList)
 
 
 if __name__ == "__main__":

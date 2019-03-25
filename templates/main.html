@@ -170,7 +170,7 @@
 
 
         <div>
-            <table border = 1>
+            <table border = 1 name="sessions_table" id="sessions_table" class="display">
                 <caption>Sessions</caption>
                 <col width="400">
                 <col width="150">
@@ -181,7 +181,7 @@
                 <th style="padding:10px"> {{ label }} </th>
              {% endfor %}
              {% for dict in result %}
-                <tr>
+                <tr class="text_data selected_grey";">
                   {% for label,value in dict.items() %}
                       <td style="padding:10px"> {{ value }} </td>                
                   {% endfor %}
@@ -190,7 +190,12 @@
              </table>
         </div> 
 
+        <div class="form-group" align="left">
+          <!-- <input type="hidden" id="box1_helper" name="box1_helper"> -->
+          <button class="btn btn-primary" name="do_resetsessions" id="do_resetsessions">Reset Selected Sessions</button>
+        </div>        
 
+        
           <div class="spinnerContainer">
             <div class="spinner">
               <div class="cube1"></div>
@@ -204,6 +209,8 @@
     </div>
 
 
+
+
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -213,6 +220,16 @@
     
 
     <script>
+
+$(".text_data td").on("click", function() {
+    var tr = $(this).parent();
+    if(tr.hasClass("selected")) {
+        tr.removeClass("selected");
+    } else {
+        tr.addClass("selected");
+    }
+    
+});
 
 $('#do_start').click(function(){
 
@@ -250,12 +267,8 @@ $.ajax({
     });    
 
 $('#do_stop').click(function(){
-
 $('.spinnerContainer').show();     
-
 data_to_be_sent = 'primaryIPinput='+document.getElementById("primaryIPinput").value+"&"+'pxGridServerCAinput='+document.getElementById("pxGridServerCAinput").value+"&"+'pxGridServerCAKeyinput='+document.getElementById("pxGridServerCAKeyinput").value+"&"+'deviceCertinput='+document.getElementById("deviceCertinput").value+"&"+'clientNodeNameinput='+document.getElementById("clientNodeNameinput").value;
-
-  
 $.ajax({
 
          url: '/DoStop', 
@@ -282,6 +295,41 @@ $.ajax({
       })
       
   });    
+
+  $('#do_resetsessions').click(function(){
+$('.spinnerContainer').show();   
+// need to populate data_to_be_sent  with a list of IP Addresses for the sessions to reset?  
+//data_to_be_sent = 'primaryIPinput='+document.getElementById("primaryIPinput").value+"&"+'pxGridServerCAinput='+document.getElementById("pxGridServerCAinput").value+"&"+'pxGridServerCAKeyinput='+document.getElementById("pxGridServerCAKeyinput").value+"&"+'deviceCertinput='+document.getElementById("deviceCertinput").value+"&"+'clientNodeNameinput='+document.getElementById("clientNodeNameinput").value;
+data_to_be_sent = 'IP of selected rows';
+
+$.ajax({
+
+         url: '/DoResetSessions', 
+           data: data_to_be_sent, 
+           type: 'POST', 
+           // Return results, and update the Deal Id, lead time, SLA, Tier 
+           success: function(response) { 
+              console.log("AJAX Response: ",response);                
+
+              //Assign values returned by the Python script to Box2 here            
+              // value is in response.sessions and response.value2;
+              //document.getElementById("box2").value=response.value2;
+              console.log(response)
+              document.open();
+              document.write(response);
+              document.close();
+           }, 
+            error: function(error) {
+              console.log(error);
+          },
+          complete: function(){
+            $('.spinnerContainer').hide();
+          }
+      })
+      
+  });  
+
+
   </script>
   </body>
 </html>
