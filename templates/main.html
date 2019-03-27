@@ -192,7 +192,7 @@
 
         <div class="form-group" align="left">
           <!-- <input type="hidden" id="box1_helper" name="box1_helper"> -->
-          <button class="btn btn-primary" name="do_resetsessions" id="do_resetsessions">Reset Selected Sessions</button>
+          <button class="btn btn-primary" name="do_resetsessions" id="do_resetsessions">Reset Selected Session</button>
         </div>        
 
         
@@ -221,15 +221,15 @@
 
     <script>
 
-$(".text_data td").on("click", function() {
-    var tr = $(this).parent();
-    if(tr.hasClass("selected")) {
-        tr.removeClass("selected");
-    } else {
-        tr.addClass("selected");
-    }
-    
+
+$("#sessions_table tr").click(function(){
+   $(this).addClass('selected').siblings().removeClass('selected');    
 });
+
+$('.ok').on('click', function(e){
+    alert($("#sessions_table tr.selected td:first").html());
+});
+
 
 $('#do_start').click(function(){
 
@@ -296,11 +296,13 @@ $.ajax({
       
   });    
 
-  $('#do_resetsessions').click(function(){
+$('#do_resetsessions').click(function(){
 $('.spinnerContainer').show();   
 // need to populate data_to_be_sent  with a list of IP Addresses for the sessions to reset?  
 //data_to_be_sent = 'primaryIPinput='+document.getElementById("primaryIPinput").value+"&"+'pxGridServerCAinput='+document.getElementById("pxGridServerCAinput").value+"&"+'pxGridServerCAKeyinput='+document.getElementById("pxGridServerCAKeyinput").value+"&"+'deviceCertinput='+document.getElementById("deviceCertinput").value+"&"+'clientNodeNameinput='+document.getElementById("clientNodeNameinput").value;
-data_to_be_sent = 'IP of selected rows';
+data_to_be_sent = $("#sessions_table tr.selected td:nth-child(4)").html();
+//alert($("#sessions_table tr.selected td:nth-child(4)").html());
+alert(data_to_be_sent);
 
 $.ajax({
 
